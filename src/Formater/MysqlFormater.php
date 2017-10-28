@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Tools\AsciiTable\Formater;
+namespace ToolkitLab\ASCII\Formater;
 
-use Tools\AsciiTable\Table;
+use ToolkitLab\ASCII\Table;
 
 class MysqlFormater extends AbstractFormater
 {

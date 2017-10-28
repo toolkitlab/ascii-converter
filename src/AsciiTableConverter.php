@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Tools\AsciiTable;
+namespace ToolkitLab\ASCII;
 
 
-use Tools\AsciiTable\Parser\SimpleParser;
+use ToolkitLab\ASCII\Parser\SimpleParser;
 
 class AsciiTableConverter
 {

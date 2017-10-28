@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tools\AsciiTable\Formater;
+namespace ToolkitLab\ASCII\Formater;
 
 
 class DotsFormater extends AbstractFormater

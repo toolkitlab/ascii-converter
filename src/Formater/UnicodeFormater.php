@@ -1,6 +1,6 @@
 <?php
 
-namespace Tools\AsciiTable\Formater;
+namespace ToolkitLab\ASCII\Formater;
 
 class UnicodeFormater extends AbstractFormater
 {

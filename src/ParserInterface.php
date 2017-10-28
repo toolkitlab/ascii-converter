@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Tools\AsciiTable;
+namespace ToolkitLab\ASCII;
 
-use Tools\AsciiTable\Table;
+use ToolkitLab\ASCII\Table;
 
 interface ParserInterface
 {

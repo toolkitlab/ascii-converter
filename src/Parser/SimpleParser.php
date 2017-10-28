@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Tools\AsciiTable\Parser;
+namespace ToolkitLab\ASCII\Parser;
 
-use Tools\AsciiTable\ParserInterface;
-use Tools\AsciiTable\Table;
+use ToolkitLab\ASCII\ParserInterface;
+use ToolkitLab\ASCII\Table;
 
 
 class SimpleParser implements ParserInterface

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tools\AsciiTable;
+namespace ToolkitLab\ASCII;
 
 
 class Table
