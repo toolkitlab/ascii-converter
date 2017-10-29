@@ -3,9 +3,6 @@
 
 namespace ToolkitLab\ASCII\Test;
 
-
-use phpDocumentor\Reflection\Types\This;
-
 class TableTest extends TableTestCase
 {
     public function testGetColumnsMaxLenght() {
