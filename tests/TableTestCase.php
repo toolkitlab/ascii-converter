@@ -8,9 +8,9 @@ use ToolkitLab\ASCII\Table;
 
 class TableTestCase extends TestCase
 {
-    public function getTestTable() {
+    public function getTestTable($dimensions = false) {
         $data = [["qweqwe","asd"], ["qaz", "wsx"], ["qw", "er"]];
-        $table = new Table($data);
+        $table = $dimensions ? new Table($data, 20, 20) : new Table($data);
         return $table;
     }
 }

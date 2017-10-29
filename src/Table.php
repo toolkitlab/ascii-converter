@@ -25,7 +25,7 @@ class Table
     public function getCell($x, $y)
     {
         if ($x >= $this->dimensionX || $y >= $this->dimensionY) {
-            throw new \Exception("Index Out of range");
+            throw new \InvalidArgumentException("Index Out of range");
         }
         if (!isset($this->data[$y][$x])) {
             return "";
