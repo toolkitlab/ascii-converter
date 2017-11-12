@@ -1,26 +1,23 @@
 <?php
 
+namespace ToolkitLab\ASCII\Formatter;
 
-namespace ToolkitLab\ASCII\Formater;
-
-
-use ToolkitLab\ASCII\FormaterInterface;
+use ToolkitLab\ASCII\FormatterInterface;
 use ToolkitLab\ASCII\Table;
 
-abstract class AbstractFormater implements FormaterInterface
-{
+abstract class AbstractFormatter implements FormatterInterface {
+
     /**
      * @var Table
      */
     protected $table;
-
     protected $metadata = [];
 
     public function setMeta($key, $value) {
         $this->metadata[$key] = $value;
     }
 
-    public function format(Table $table, $firstRowAsHeader = true){
+    public function format(Table $table, $firstRowAsHeader = true) {
         $this->table = $table;
         $str = "";
 
@@ -37,10 +34,9 @@ abstract class AbstractFormater implements FormaterInterface
                 $delimiter = $this->metadata["HBM"];
             }
             $str .= $this->metadata["HBR"] . PHP_EOL;
-
         }
 
-        for ($i = $firsRow; $i < $this->table->getDimensionY(); $i++){
+        for ($i = $firsRow; $i < $this->table->getDimensionY(); $i++) {
             $str .= $this->line($i);
         }
 
@@ -58,11 +54,10 @@ abstract class AbstractFormater implements FormaterInterface
         return $str;
     }
 
-
     private function line($rowIndex) {
         $retStr = "";
         $delimiter = $this->metadata["BL"];
-        for ($i = 0; $i < $this->table->getDimensionX(); $i++){
+        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
             $retStr .= $delimiter;
             $cell = $this->table->getCell($i, $rowIndex);
             $retStr .= " " . $cell . str_repeat(" ", $this->table->getColumnsMaxLenght($i) - strlen($cell)) . " ";
@@ -89,7 +84,7 @@ abstract class AbstractFormater implements FormaterInterface
 
         // Second row
         $delimiter = $this->metadata["BL"];
-        for ($i = 0; $i < $this->table->getDimensionX(); $i++){
+        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
             $retStr .= $delimiter;
             $retStr .= " " . $this->table->getCell($i, 0) . " ";
         }
@@ -97,7 +92,7 @@ abstract class AbstractFormater implements FormaterInterface
 
         // Third row
         $delimiter = $this->metadata["H2BL"];
-        for ($i = 0; $i < $this->table->getDimensionX(); $i++){
+        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
             $columnLenght = $this->table->getColumnsMaxLenght($i) + 2;
             $retStr .= $delimiter;
             $retStr .= str_repeat($this->metadata["BPAD"], $columnLenght);
@@ -108,4 +103,5 @@ abstract class AbstractFormater implements FormaterInterface
 
         return $retStr;
     }
+
 }

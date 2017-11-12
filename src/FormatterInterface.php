@@ -4,7 +4,7 @@
 namespace ToolkitLab\ASCII;
 
 
-interface FormaterInterface
+interface FormatterInterface
 {
     /**
      * @param Table $table

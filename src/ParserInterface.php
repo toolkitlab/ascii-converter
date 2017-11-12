@@ -1,12 +1,11 @@
 <?php
 
-
 namespace ToolkitLab\ASCII;
 
 use ToolkitLab\ASCII\Table;
 
-interface ParserInterface
-{
+interface ParserInterface {
+
     /**
      * Parse input data to Table class
      *

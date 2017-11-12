@@ -1,11 +1,9 @@
 <?php
 
+namespace ToolkitLab\ASCII\Formatter;
 
-namespace ToolkitLab\ASCII\Formater;
+class TableFormatter extends AbstractFormatter {
 
-
-class TableFormater extends AbstractFormater
-{
     protected $metadata = [
         "name" => "Table",
         "useHeader" => true,
@@ -31,4 +29,5 @@ class TableFormater extends AbstractFormater
         "FBM" => " ",
         "FPAD" => "-"
     ];
+
 }

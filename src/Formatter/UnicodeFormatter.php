@@ -1,16 +1,15 @@
 <?php
 
-namespace ToolkitLab\ASCII\Formater;
+namespace ToolkitLab\ASCII\Formatter;
 
-class UnicodeFormater extends AbstractFormater
-{
-    public function __construct()
-    {
+class UnicodeFormatter extends AbstractFormatter {
+
+    public function __construct() {
         $this->metadata = [
-            "name"=> "Unicode",
-            "useHeader"=>true,
-            "useFooter"=> true,
-            "isSeparated"=> false,
+            "name" => "Unicode",
+            "useHeader" => true,
+            "useFooter" => true,
+            "isSeparated" => false,
             "BL" => json_decode('"\u2551"'),
             "BR" => json_decode('"\u2551"'),
             "BM" => json_decode('"\u2551"'),
@@ -32,4 +31,5 @@ class UnicodeFormater extends AbstractFormater
             "FPAD" => json_decode('"\u2550"')
         ];
     }
+
 }

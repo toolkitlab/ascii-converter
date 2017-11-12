@@ -1,11 +1,9 @@
 <?php
 
+namespace ToolkitLab\ASCII\Formatter;
 
-namespace ToolkitLab\ASCII\Formater;
+class DotsFormatter extends AbstractFormatter {
 
-
-class DotsFormater extends AbstractFormater
-{
     protected $metadata = [
         "name" => "Dots",
         "useHeader" => true,
@@ -31,4 +29,5 @@ class DotsFormater extends AbstractFormater
         "FBM" => ":",
         "FPAD" => "."
     ];
+
 }

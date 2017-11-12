@@ -1,18 +1,15 @@
 <?php
 
-
 namespace ToolkitLab\ASCII;
-
 
 use ToolkitLab\ASCII\Parser\SimpleParser;
 
-class AsciiTableConverter
-{
+class AsciiTableConverter {
+
     /**
      * @var Table
      */
     private $table;
-
     private $parser;
 
     public function __construct(ParserInterface $parser = null) {
@@ -26,8 +23,7 @@ class AsciiTableConverter
     /**
      * @param ParserInterface $parser
      */
-    public function setParser($parser)
-    {
+    public function setParser($parser) {
         $this->parser = $parser;
     }
 
@@ -37,6 +33,5 @@ class AsciiTableConverter
     public function setData($data) {
         $this->table = $this->parser->parse($data);
     }
-
 
 }

@@ -1,10 +1,9 @@
 <?php
 
-
 namespace ToolkitLab\ASCII\Test;
 
-class TableTest extends TableTestCase
-{
+class TableTest extends TableTestCase {
+
     public function testGetColumnsMaxLenght() {
         $table = $this->getTestTable();
         $len = $table->getColumnsMaxLenght(0);
@@ -14,11 +13,11 @@ class TableTest extends TableTestCase
 
     public function testGetCell() {
         $table = $this->getTestTable();
-        $cell1 = $table->getCell(0,0);
-        $cell2 = $table->getCell(1,0);
-        $cell3 = $table->getCell(0,1);
-        $cell4 = $table->getCell(1,1);
-        
+        $cell1 = $table->getCell(0, 0);
+        $cell2 = $table->getCell(1, 0);
+        $cell3 = $table->getCell(0, 1);
+        $cell4 = $table->getCell(1, 1);
+
         $table = $this->getTestTable(true);
         $cell5 = $table->getCell(15, 15);
 
@@ -55,16 +54,16 @@ class TableTest extends TableTestCase
 
     public function testSetData() {
         $table = $this->getTestTable();
-        $table->setData([["q", "w"],["e", "r"]]);
+        $table->setData([["q", "w"], ["e", "r"]]);
         $dx = $table->getDimensionX();
         $dy = $table->getDimensionY();
         $this->assertEquals($dx, 2);
         $this->assertEquals($dy, 2);
 
-        $cell1 = $table->getCell(0,0);
-        $cell2 = $table->getCell(1,0);
-        $cell3 = $table->getCell(0,1);
-        $cell4 = $table->getCell(1,1);
+        $cell1 = $table->getCell(0, 0);
+        $cell2 = $table->getCell(1, 0);
+        $cell3 = $table->getCell(0, 1);
+        $cell4 = $table->getCell(1, 1);
 
         $this->assertEquals($cell1, "q");
         $this->assertEquals($cell2, "w");

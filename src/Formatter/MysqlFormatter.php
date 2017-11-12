@@ -1,12 +1,11 @@
 <?php
 
-
-namespace ToolkitLab\ASCII\Formater;
+namespace ToolkitLab\ASCII\Formatter;
 
 use ToolkitLab\ASCII\Table;
 
-class MysqlFormater extends AbstractFormater
-{
+class MysqlFormatter extends AbstractFormatter {
+
     protected $metadata = [
         "name" => "Mysql",
         "useHeader" => true,
@@ -32,4 +31,5 @@ class MysqlFormater extends AbstractFormater
         "FBM" => "+",
         "FPAD" => "-"
     ];
+
 }

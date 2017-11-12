@@ -1,18 +1,15 @@
 <?php
 
-
 namespace ToolkitLab\ASCII;
 
+class Table {
 
-class Table
-{
     private $data = [];
     private $dimensionX;
     private $dimensionY;
     private $columnsMaxLenght = [];
 
-    public function __construct($_data, $_dimensionX = null, $_dimensionY = null)
-    {
+    public function __construct($_data, $_dimensionX = null, $_dimensionY = null) {
         $this->data = $_data;
         if (is_null($_dimensionX)) {
             $this->calculateDimensions();
@@ -22,8 +19,7 @@ class Table
         }
     }
 
-    public function getCell($x, $y)
-    {
+    public function getCell($x, $y) {
         if ($x >= $this->dimensionX || $y >= $this->dimensionY) {
             throw new \InvalidArgumentException("Index Out of range");
         }
@@ -37,13 +33,14 @@ class Table
      * @param int $columnIndex
      * @return int
      */
-    public function getColumnsMaxLenght($columnIndex)
-    {
-        if(isset($this->columnsMaxLenght[$columnIndex])) return $this->columnsMaxLenght[$columnIndex];
+    public function getColumnsMaxLenght($columnIndex) {
+        if (isset($this->columnsMaxLenght[$columnIndex]))
+            return $this->columnsMaxLenght[$columnIndex];
         $width = 0;
         for ($y = 0; $y < $this->dimensionY; $y++) {
             $len = strlen($this->getCell($columnIndex, $y));
-            if ($len > $width) $width = $len;
+            if ($len > $width)
+                $width = $len;
         }
 
         $this->columnsMaxLenght[$columnIndex] = $width;
@@ -53,18 +50,17 @@ class Table
     /**
      * @return array
      */
-    public function getData()
-    {
+    public function getData() {
         return $this->data;
     }
 
-    private function calculateDimensions()
-    {
+    private function calculateDimensions() {
         $this->dimensionY = $this->dimensionX = 0;
 
         foreach ($this->data as $row) {
             $cnt = count($row);
-            if ($cnt > $this->dimensionX) $this->dimensionX = $cnt;
+            if ($cnt > $this->dimensionX)
+                $this->dimensionX = $cnt;
         }
         $this->dimensionY = count($this->data);
     }
@@ -72,8 +68,7 @@ class Table
     /**
      * @param array $data
      */
-    public function setData($data)
-    {
+    public function setData($data) {
         $this->data = $data;
         $this->calculateDimensions();
     }
@@ -81,16 +76,15 @@ class Table
     /**
      * @return mixed
      */
-    public function getDimensionX()
-    {
+    public function getDimensionX() {
         return $this->dimensionX;
     }
 
     /**
      * @return mixed
      */
-    public function getDimensionY()
-    {
+    public function getDimensionY() {
         return $this->dimensionY;
     }
+
 }
