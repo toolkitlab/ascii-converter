@@ -13,10 +13,6 @@ abstract class AbstractFormatter implements FormatterInterface {
     protected $table;
     protected $metadata = [];
 
-    public function setMeta($key, $value) {
-        $this->metadata[$key] = $value;
-    }
-
     public function format(Table $table, $firstRowAsHeader = true) {
         $this->table = $table;
         $str = "";
