@@ -34,13 +34,15 @@ class Table {
      * @return int
      */
     public function getColumnsMaxLenght($columnIndex) {
-        if (isset($this->columnsMaxLenght[$columnIndex]))
-            return $this->columnsMaxLenght[$columnIndex];
+        if (isset($this->columnsMaxLenght[$columnIndex])) {
+                    return $this->columnsMaxLenght[$columnIndex];
+        }
         $width = 0;
         for ($y = 0; $y < $this->dimensionY; $y++) {
             $len = strlen($this->getCell($columnIndex, $y));
-            if ($len > $width)
-                $width = $len;
+            if ($len > $width) {
+                            $width = $len;
+            }
         }
 
         $this->columnsMaxLenght[$columnIndex] = $width;
@@ -59,8 +61,9 @@ class Table {
 
         foreach ($this->data as $row) {
             $cnt = count($row);
-            if ($cnt > $this->dimensionX)
-                $this->dimensionX = $cnt;
+            if ($cnt > $this->dimensionX) {
+                            $this->dimensionX = $cnt;
+            }
         }
         $this->dimensionY = count($this->data);
     }
