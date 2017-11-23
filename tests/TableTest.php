@@ -70,5 +70,73 @@ class TableTest extends TableTestCase {
         $this->assertEquals($cell3, "e");
         $this->assertEquals($cell4, "r");
     }
+    
+    public function testRotate() {
+        $table = $this->getTestTable();
+        $data = [
+            ['q', 'w'],
+            ['e', 'r'],
+            ['u', 'p'],
+        ];
+        $table->setData($data);
+        $table->rotate(90);
+        $this->assertEquals($table->getData(), [
+            ['u', 'e', 'q'], 
+            ['p', 'r', 'w'],
+        ]);
+        $table->setData($data);
+        $table->rotate(180);
+        $this->assertEquals($table->getData(), [
+            ['p', 'u'], 
+            ['r', 'e'],
+            ['w', 'q'],
+        ]);
+        $table->setData($data);
+        $table->rotate(270);
+        $this->assertEquals($table->getData(), [
+            ['w', 'r', 'p'], 
+            ['q', 'e', 'u'], 
+        ]);
+        $table->setData($data);
+        $table->rotate(-90);
+        $this->assertEquals($table->getData(), [
+            ['w', 'r', 'p'], 
+            ['q', 'e', 'u'], 
+        ]);
+        $table->setData($data);
+        $table->rotate(-180);
+        $this->assertEquals($table->getData(), [
+            ['p', 'u'],
+            ['r', 'e'],
+            ['w', 'q'],
+        ]);
+        $table->setData($data);
+        $table->rotate(-270);
+        $this->assertEquals($table->getData(), [
+            ['u', 'e', 'q'],
+            ['p', 'r', 'w'],
+        ]);
+        // rotate the previous array, not that one specified at the beginning
+        $table->rotate(-90);
+        $this->assertEquals($table->getData(), [
+            ['q', 'w'],
+            ['e', 'r'],
+            ['u', 'p'],
+        ]);
+    }
+    
+    /**
+     * @expectedException     InvalidArgumentException
+     */
+    public function testRotateException() {
+        $table = $this->getTestTable();
+        $data = [
+            ['q', 'w'],
+            ['e', 'r'],
+            ['u', 'p'],
+        ];
+        $table->setData($data);
+        $table->rotate(1);
+    }
 
 }

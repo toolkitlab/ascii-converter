@@ -89,5 +89,52 @@ class Table {
     public function getDimensionY() {
         return $this->dimensionY;
     }
+    
+    /**
+     * Rotate the table
+     * @param int $angle 90, 180, 270, -90, -180, -270
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function rotate($angle) {
+        $data = [];
+        switch($angle) {
+            case 90:
+                for($i = count($this->data) - 1; $i >= 0; $i--) {
+                    foreach($this->data[$i] as $key => $val) {
+                        $data[$key][] = $val;
+                    }
+                }
+                break;
+            case 180:
+                $this->rotate(90);
+                $this->rotate(90);
+                return;
+            case 270:
+                $this->rotate(-90);
+                return;
+            case -90:
+                for ($i = $this->getDimensionX() -1; $i >= 0; $i--) {
+                    $row = [];
+                    foreach ($this->data as $val) {
+                        $row[] = $val[$i];
+                    }
+                    $data[] = $row;
+                }
+                break;
+            case -180:
+                $this->rotate(90);
+                $this->rotate(90);
+                return;
+                break;
+            case -270:
+                $this->rotate(90);
+                return;
+            default:
+                throw new \InvalidArgumentException("The angle should be one of the following: 90, 180, 270, -90, -180, -270");
+        }
+        $this->data = $data;
+        $this->calculateDimensions();
+    }
 
 }
