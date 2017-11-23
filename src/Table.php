@@ -98,10 +98,10 @@ class Table {
      */
     public function rotate($angle) {
         $data = [];
-        switch($angle) {
+        switch ($angle) {
             case 90:
-                for($i = count($this->data) - 1; $i >= 0; $i--) {
-                    foreach($this->data[$i] as $key => $val) {
+                for ($i = count($this->data) - 1; $i >= 0; $i--) {
+                    foreach ($this->data[$i] as $key => $val) {
                         $data[$key][] = $val;
                     }
                 }
@@ -114,7 +114,7 @@ class Table {
                 $this->rotate(-90);
                 return;
             case -90:
-                for ($i = $this->getDimensionX() -1; $i >= 0; $i--) {
+                for ($i = $this->getDimensionX() - 1; $i >= 0; $i--) {
                     $row = [];
                     foreach ($this->data as $val) {
                         $row[] = $val[$i];
