@@ -126,7 +126,6 @@ class Table {
                 $this->rotate(90);
                 $this->rotate(90);
                 return;
-                break;
             case -270:
                 $this->rotate(90);
                 return;
