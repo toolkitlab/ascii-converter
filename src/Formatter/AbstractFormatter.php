@@ -2,7 +2,6 @@
 
 namespace ToolkitLab\ASCII\Formatter;
 
-use ToolkitLab\ASCII\FormatterInterface;
 use ToolkitLab\ASCII\Table;
 
 abstract class AbstractFormatter implements FormatterInterface {
@@ -11,93 +10,185 @@ abstract class AbstractFormatter implements FormatterInterface {
      * @var Table
      */
     protected $table;
+
+    /**
+     * @var array
+     */
     protected $metadata = [];
 
-    public function format(Table $table, $firstRowAsHeader = true) {
-        $this->table = $table;
-        $str = "";
+    /**
+     * @var string
+     */
+    protected $output = '';
 
-        $firsRow = 0;
-        if ($firstRowAsHeader) {
-            $str .= $this->header();
-            $firsRow = 1;
-        } else if ($this->metadata['useHeader']) {
-            $delimiter = $this->metadata["HBL"];
-            for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
-                $columnLenght = $this->table->getColumnsMaxLenght($i) + 2;
-                $str .= $delimiter;
-                $str .= str_repeat($this->metadata["HPAD"], $columnLenght);
-                $delimiter = $this->metadata["HBM"];
-            }
-            $str .= $this->metadata["HBR"] . PHP_EOL;
-        }
+    /**
+     * The data to be formatted
+     * @var array
+     */
+    protected $data = [];
 
-        for ($i = $firsRow; $i < $this->table->getDimensionY(); $i++) {
-            $str .= $this->line($i);
-        }
+    /**
+     * Formatting parameters
+     * @var array
+     */
+    protected $params = [
+        'first_row_header' => false,
+    ];
 
-        if ($this->metadata['useFooter']) {
-            $delimiter = $this->metadata["FBL"];
-            for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
-                $columnLenght = $this->table->getColumnsMaxLenght($i) + 2;
-                $str .= $delimiter;
-                $str .= str_repeat($this->metadata["FPAD"], $columnLenght);
-                $delimiter = $this->metadata["FBM"];
-            }
-            $str .= $this->metadata["FBR"] . PHP_EOL;
-        }
-
-        return $str;
+    /**
+     * Constructor
+     * @param array $params
+     */
+    public function __construct($params = []) {
+        $this->setParams($params);
     }
 
-    private function line($rowIndex) {
-        $retStr = "";
-        $delimiter = $this->metadata["BL"];
-        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
-            $retStr .= $delimiter;
-            $cell = $this->table->getCell($i, $rowIndex);
-            $retStr .= " " . $cell . str_repeat(" ", $this->table->getColumnsMaxLenght($i) - strlen($cell)) . " ";
-            $delimiter = $this->metadata["BM"];
-        }
-        $retStr .= $this->metadata["BR"] . PHP_EOL;
-        return $retStr;
+    /**
+     * Converts an array into ASCII-formatted string (table)
+     * @param Table $table
+     * @param array $params
+     * @return string
+     */
+    public function format($data, $params = []) {
+        $this->init($data, $params);
+        $this->addTopBorder();
+        $this->addHeader();
+        $this->addRows();
+        $this->addBottomBorder();
+        return $this->output;
     }
 
-    protected function header() {
-        $retStr = "";
+    /**
+     * Initializes the data/parameters before formatting
+     * @param Table $table
+     * @param array $params
+     * @return void
+     */
+    protected function init($data, $params = []) {
+        $this->table = new Table($data);
+        $this->output = '';
+        $this->data = $this->table->getData();
+        $this->setParams($params);
+    }
 
-        // First row
-        if ($this->metadata['useHeader']) {
-            $delimiter = $this->metadata["HBL"];
-            for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
-                $columnLenght = $this->table->getColumnsMaxLenght($i) + 2;
-                $retStr .= $delimiter;
-                $retStr .= str_repeat($this->metadata["HPAD"], $columnLenght);
-                $delimiter = $this->metadata["HBM"];
+    /**
+     * Updates the parameters with new values
+     * @param array $params
+     * @throws \InvalidArgumentException
+     */
+    protected function setParams($params) {
+        $unknownParams = array_diff(array_keys($params), array_keys($this->params));
+        if (count($unknownParams)) {
+            throw new \InvalidArgumentException('Unknown parameter(-s): ' . implode(', ', $unknownParams));
+        }
+        $this->params = array_merge($this->params, $params);
+    }
+
+    /**
+     * Get the specified parameter
+     * @param string $key
+     * @return mixed
+     */
+    protected function getParam($key) {
+        return $this->params[$key];
+    }
+
+    /**
+     * Adds the top border to the output
+     * @return void
+     */
+    protected function addTopBorder() {
+        if ($this->metadata['topBorder']) {
+            $this->addRow(
+                    $this->metadata["HBL"], $this->metadata["HBM"], $this->metadata["HBR"], $this->metadata["HPAD"]
+            );
+        }
+    }
+
+    /**
+     * Adds the header row to the output
+     * @return void
+     */
+    protected function addHeader() {
+        if ($this->getParam('first_row_header')) {
+            $this->addDataRow(array_shift($this->data));
+            $this->addHeaderBorder();
+        }
+    }
+
+    /**
+     * Adds the rows to the output
+     */
+    protected function addRows() {
+        array_walk($this->data, [$this, 'addDataRow']);
+    }
+
+    /**
+     * Adds the row with the specified data to the output
+     * @param array $row
+     * @return void
+     */
+    protected function addDataRow($row) {
+        $this->addRow(
+            $this->metadata["BL"],
+            $this->metadata["BM"],
+            $this->metadata["BR"],
+            ' ',
+            $row
+        );
+    }
+
+    /**
+     * Adds the bottom border of the header to the output
+     * @return void
+     */
+    protected function addHeaderBorder() {
+        $this->addRow(
+            $this->metadata["H2BL"],
+            $this->metadata["H2BM"],
+            $this->metadata["H2BR"],
+            $this->metadata["H2PAD"]
+        );
+    }
+
+    /**
+     * Adds the bottom border to the output
+     * @return void
+     */
+    protected function addBottomBorder() {
+        if ($this->metadata['bottomBorder']) {
+            $this->addRow(
+                $this->metadata["FBL"],
+                $this->metadata["FBM"],
+                $this->metadata["FBR"],
+                $this->metadata["FPAD"]
+            );
+        }
+    }
+
+    /**
+     * Adds the row to the output
+     * @param string $lb
+     * @param string $bm
+     * @param string $br
+     * @param string $pad
+     * @param array $row
+     * @return void
+     */
+    protected function addRow($lb, $bm, $br, $pad, $row = []) {
+        $delimiter = $lb;
+        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
+            $maxLength = $this->table->getColumnsMaxLenght($i);
+            $this->output .= $delimiter;
+            if (count($row)) {
+                $spaces = str_repeat($pad, $maxLength - strlen($row[$i]));
+                $this->output .= " {$row[$i]}{$spaces} ";
+            } else {
+                $this->output .= str_repeat($pad, $maxLength + 2);
             }
-            $retStr .= $this->metadata["HBR"] . PHP_EOL;
+            $delimiter = $bm;
         }
-
-        // Second row
-        $delimiter = $this->metadata["BL"];
-        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
-            $retStr .= $delimiter;
-            $retStr .= " " . $this->table->getCell($i, 0) . " ";
-        }
-        $retStr .= $this->metadata["BR"] . PHP_EOL;
-
-        // Third row
-        $delimiter = $this->metadata["H2BL"];
-        for ($i = 0; $i < $this->table->getDimensionX(); $i++) {
-            $columnLenght = $this->table->getColumnsMaxLenght($i) + 2;
-            $retStr .= $delimiter;
-            $retStr .= str_repeat($this->metadata["BPAD"], $columnLenght);
-            $delimiter = $this->metadata["H2BM"];
-        }
-        $retStr .= $this->metadata["H2BR"] . PHP_EOL;
-
-
-        return $retStr;
+        $this->output .= $br . PHP_EOL;
     }
 
 }

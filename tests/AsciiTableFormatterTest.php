@@ -2,18 +2,20 @@
 
 namespace ToolkitLab\ASCII\Test;
 
-use ToolkitLab\ASCII\Formatter\MarkdownFormatter;
-use ToolkitLab\ASCII\Formatter\MysqlFormatter;
-use ToolkitLab\ASCII\Formatter\TableFormatter;
-use ToolkitLab\ASCII\Formatter\UnicodeFormatter;
-use ToolkitLab\ASCII\Formatter\DotsFormatter;
+use ToolkitLab\ASCII\Formatter\Formatters\MarkdownFormatter;
+use ToolkitLab\ASCII\Formatter\Formatters\MysqlFormatter;
+use ToolkitLab\ASCII\Formatter\Formatters\TableFormatter;
+use ToolkitLab\ASCII\Formatter\Formatters\UnicodeFormatter;
+use ToolkitLab\ASCII\Formatter\Formatters\DotsFormatter;
+use PHPUnit\Framework\TestCase;
 
-class AsciiTableFormatterTest extends TableTestCase {
+class AsciiTableFormatterTest extends TestCase {
+    
+    private $testData = [["qweqwe", "asd"], ["qaz", "wsx"], ["qw", "er"]];
 
     public function testMysql() {
-        $table = $this->getTestTable();
         $formatter = new MysqlFormatter();
-        $result = $formatter->format($table);
+        $result = $formatter->format($this->testData, ['first_row_header' => true]);
 
         $expect = <<<STR
 +--------+-----+
@@ -29,9 +31,8 @@ STR;
     }
 
     public function testMysqlNoHeader() {
-        $table = $this->getTestTable();
         $formatter = new MysqlFormatter();
-        $result = $formatter->format($table, false);
+        $result = $formatter->format($this->testData);
 
         $expect = <<<STR
 +--------+-----+
@@ -46,9 +47,8 @@ STR;
     }
 
     public function testMarkdown() {
-        $table = $this->getTestTable();
         $formatter = new MarkdownFormatter();
-        $result = $formatter->format($table);
+        $result = $formatter->format($this->testData, ['first_row_header' => true]);
 
         $expect = <<<STR
 | qweqwe | asd |
@@ -62,9 +62,8 @@ STR;
     }
 
     public function testMarkdownNoHeader() {
-        $table = $this->getTestTable();
         $formatter = new MarkdownFormatter();
-        $result = $formatter->format($table, false);
+        $result = $formatter->format($this->testData);
 
         $expect = <<<STR
 | qweqwe | asd |
@@ -77,9 +76,8 @@ STR;
     }
 
     public function testUnicode() {
-        $table = $this->getTestTable();
         $formatter = new UnicodeFormatter();
-        $result = $formatter->format($table);
+        $result = $formatter->format($this->testData, ['first_row_header' => true]);
 
         $expect = <<<STR
 ╔════════╦═════╗
@@ -95,9 +93,8 @@ STR;
     }
 
     public function testUnicodeNoHeader() {
-        $table = $this->getTestTable();
         $formatter = new UnicodeFormatter();
-        $result = $formatter->format($table, false);
+        $result = $formatter->format($this->testData);
 
         $expect = <<<STR
 ╔════════╦═════╗
@@ -111,9 +108,8 @@ STR;
     }
 
     public function testDots() {
-        $table = $this->getTestTable();
         $formatter = new DotsFormatter();
-        $result = $formatter->format($table);
+        $result = $formatter->format($this->testData, ['first_row_header' => true]);
 
         $expect = <<<STR
 ................
@@ -129,9 +125,8 @@ STR;
     }
 
     public function testDotsNoHeader() {
-        $table = $this->getTestTable();
         $formatter = new DotsFormatter();
-        $result = $formatter->format($table, false);
+        $result = $formatter->format($this->testData);
 
         $expect = <<<STR
 ................
@@ -146,17 +141,16 @@ STR;
     }
 
     public function testTable() {
-        $table = $this->getTestTable();
         $formatter = new TableFormatter();
-        $result = $formatter->format($table);
+        $result = $formatter->format($this->testData, ['first_row_header' => true]);
 
         $expect = <<<STR
  ________ _____ 
 | qweqwe | asd |
-|--------|-----|
+|________|_____|
 | qaz    | wsx |
 | qw     | er  |
- -------- ----- 
+ ¯¯¯¯¯¯¯¯ ¯¯¯¯¯ 
 
 STR;
 
@@ -164,20 +158,26 @@ STR;
     }
 
     public function testTableNoHeader() {
-        $table = $this->getTestTable();
         $formatter = new TableFormatter();
-        $result = $formatter->format($table, false);
+        $result = $formatter->format($this->testData);
 
         $expect = <<<STR
  ________ _____ 
 | qweqwe | asd |
 | qaz    | wsx |
 | qw     | er  |
- -------- ----- 
+ ¯¯¯¯¯¯¯¯ ¯¯¯¯¯ 
 
 STR;
 
         $this->assertEquals($result, $expect);
+    }
+    
+    /**
+     * @expectedException     InvalidArgumentException
+     */
+    public function testSetUnknownParams() {
+        $formatter = new TableFormatter(['unknown_param' => 1]);
     }
 
 }

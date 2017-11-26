@@ -1,15 +1,15 @@
 <?php
 
-namespace ToolkitLab\ASCII\Formatter;
+namespace ToolkitLab\ASCII\Formatter\Formatters;
 
-use ToolkitLab\ASCII\Table;
+use ToolkitLab\ASCII\Formatter\AbstractFormatter;
 
 class MysqlFormatter extends AbstractFormatter {
 
     protected $metadata = [
         "name" => "Mysql",
-        "useHeader" => true,
-        "useFooter" => true,
+        "topBorder" => true,
+        "bottomBorder" => true,
         "isSeparated" => false,
         "BL" => "|",
         "BR" => "|",

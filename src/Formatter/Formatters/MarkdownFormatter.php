@@ -1,13 +1,15 @@
 <?php
 
-namespace ToolkitLab\ASCII\Formatter;
+namespace ToolkitLab\ASCII\Formatter\Formatters;
+
+use ToolkitLab\ASCII\Formatter\AbstractFormatter;
 
 class MarkdownFormatter extends AbstractFormatter {
 
     protected $metadata = [
         "name" => "Markdown",
-        "useHeader" => false,
-        "useFooter" => false,
+        "topBorder" => false,
+        "bottomBorder" => false,
         "isSeparated" => false,
         "BL" => "|",
         "BR" => "|",

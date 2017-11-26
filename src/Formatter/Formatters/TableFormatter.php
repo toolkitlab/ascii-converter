@@ -1,13 +1,15 @@
 <?php
 
-namespace ToolkitLab\ASCII\Formatter;
+namespace ToolkitLab\ASCII\Formatter\Formatters;
+
+use ToolkitLab\ASCII\Formatter\AbstractFormatter;
 
 class TableFormatter extends AbstractFormatter {
 
     protected $metadata = [
         "name" => "Table",
-        "useHeader" => true,
-        "useFooter" => true,
+        "topBorder" => true,
+        "bottomBorder" => true,
         "isSeparated" => false,
         "BL" => "|",
         "BR" => "|",
@@ -27,7 +29,7 @@ class TableFormatter extends AbstractFormatter {
         "FBL" => " ",
         "FBR" => " ",
         "FBM" => " ",
-        "FPAD" => "-"
+        "FPAD" => "¯"
     ];
 
 }

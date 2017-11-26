@@ -1,13 +1,15 @@
 <?php
 
-namespace ToolkitLab\ASCII\Formatter;
+namespace ToolkitLab\ASCII\Formatter\Formatters;
+
+use ToolkitLab\ASCII\Formatter\AbstractFormatter;
 
 class DotsFormatter extends AbstractFormatter {
 
     protected $metadata = [
         "name" => "Dots",
-        "useHeader" => true,
-        "useFooter" => true,
+        "topBorder" => true,
+        "bottomBorder" => true,
         "isSeparated" => false,
         "BL" => ":",
         "BR" => ":",
