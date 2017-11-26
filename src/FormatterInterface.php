@@ -7,9 +7,9 @@ namespace ToolkitLab\ASCII;
 interface FormatterInterface
 {
     /**
-     * @param Table $table
-     * @param bool $firstRowAsHeader
+     * @param array $data
+     * @param array $params
      * @return string
      */
-    public function format(Table $table, $firstRowAsHeader = true);
+    public function format($data, $params = []);
 }

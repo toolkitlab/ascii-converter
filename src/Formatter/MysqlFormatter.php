@@ -2,34 +2,36 @@
 
 namespace ToolkitLab\ASCII\Formatter;
 
-use ToolkitLab\ASCII\Table;
+use ToolkitLab\ASCII\AbstractFormatter;
 
 class MysqlFormatter extends AbstractFormatter {
 
     protected $metadata = [
-        "name" => "Mysql",
-        "useHeader" => true,
-        "useFooter" => true,
-        "isSeparated" => false,
-        "BL" => "|",
-        "BR" => "|",
-        "BM" => "|",
-        "HBL" => "+",
-        "HBR" => "+",
-        "HBM" => "+",
-        "HPAD" => "-",
-        "H2BL" => "+",
-        "H2BR" => "+",
-        "H2BM" => "+",
-        "H2PAD" => "-",
-        "BBL" => "+",
-        "BBR" => "+",
-        "BBM" => "+",
-        "BPAD" => "-",
-        "FBL" => "+",
-        "FBR" => "+",
-        "FBM" => "+",
-        "FPAD" => "-"
+        'name' => 'Mysql',
+        'content' => [
+            'left' => '|',
+            'middle' => '|',
+            'right' => '|',
+            'pad' => ' ',
+        ],
+        'top_border' => [
+            'left' => '+',
+            'middle' => '+',
+            'right' => '+',
+            'pad' => '-',
+        ],
+        'header' => [
+            'left' => '+',
+            'middle' => '+',
+            'right' => '+',
+            'pad' => '-',
+        ],
+        'bottom_border' => [
+            'left' => '+',
+            'middle' => '+',
+            'right' => '+',
+            'pad' => '-'
+        ],
     ];
 
 }

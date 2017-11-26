@@ -9,16 +9,41 @@ class Table {
     private $dimensionY;
     private $columnsMaxLenght = [];
 
-    public function __construct($_data, $_dimensionX = null, $_dimensionY = null) {
-        $this->data = $_data;
-        if (is_null($_dimensionX)) {
-            $this->calculateDimensions();
-        } else {
-            $this->dimensionX = $_dimensionX;
-            $this->dimensionY = $_dimensionY;
+    /**
+     * Constructor
+     * @param array $data
+     * @param int $dimensionX
+     * @param int $dimensionY
+     */
+    public function __construct(array $data, $dimensionX = null, $dimensionY = null) {
+        $this->setData($data, $dimensionX, $dimensionY);
+    }
+    
+    /**
+     * Truncates the values, which are longer that $maxLength
+     * @param int $maxLength
+     * @param string $ending
+     */
+    public function truncate($maxLength, $ending = '...') {
+        foreach ($this->data as &$row) {
+            foreach ($row as &$cell) {
+                $cell = trim($cell);
+                if (strlen($cell) > $maxLength) {
+                    $cell = substr($cell, 0, $maxLength);
+                    $cell = trim($cell, ';,. ') . $ending;
+                }
+            }
         }
+        $this->calculateDimensions();
     }
 
+    /**
+     * Returns the specified cell content
+     * @param int $x
+     * @param int $y
+     * @return string
+     * @throws \InvalidArgumentException
+     */
     public function getCell($x, $y) {
         if ($x >= $this->dimensionX || $y >= $this->dimensionY) {
             throw new \InvalidArgumentException("Index Out of range");
@@ -30,110 +55,144 @@ class Table {
     }
 
     /**
+     * Return the maximum length of the column
      * @param int $columnIndex
      * @return int
      */
-    public function getColumnsMaxLenght($columnIndex) {
+    public function getColumnsMaxLength($columnIndex) {
         if (isset($this->columnsMaxLenght[$columnIndex])) {
-                    return $this->columnsMaxLenght[$columnIndex];
+            return $this->columnsMaxLenght[$columnIndex];
         }
         $width = 0;
         for ($y = 0; $y < $this->dimensionY; $y++) {
             $len = strlen($this->getCell($columnIndex, $y));
             if ($len > $width) {
-                            $width = $len;
+                $width = $len;
             }
         }
-
         $this->columnsMaxLenght[$columnIndex] = $width;
         return $width;
     }
 
     /**
+     * Returns the data
      * @return array
      */
     public function getData() {
         return $this->data;
     }
 
+    /**
+     * Calculates the dimensions
+     */
     private function calculateDimensions() {
         $this->dimensionY = $this->dimensionX = 0;
-
         foreach ($this->data as $row) {
             $cnt = count($row);
             if ($cnt > $this->dimensionX) {
-                            $this->dimensionX = $cnt;
+                $this->dimensionX = $cnt;
             }
         }
         $this->dimensionY = count($this->data);
+        $this->columnsMaxLenght = [];
     }
 
     /**
+     * Sets the data and calculates the dimensions (if not specified)
      * @param array $data
      */
-    public function setData($data) {
+    public function setData(array $data, $dimensionX = null, $dimensionY = null) {
+        $this->validate($data);
         $this->data = $data;
-        $this->calculateDimensions();
+        if (is_null($dimensionX)) {
+            $this->calculateDimensions();
+        } else {
+            $this->dimensionX = $dimensionX;
+            $this->dimensionY = $dimensionY;
+        }
+    }
+    
+    /**
+     * Validates the data
+     * @param array $data
+     * @throws \InvalidArgumentException
+     */
+    protected function validate($data) {
+        $acceptedTypes = ['integer', 'double', 'string'];
+        foreach ($data as $row) {
+            foreach ($row as $cell) {
+                if (!in_array(gettype($cell), $acceptedTypes)) {
+                    throw new \InvalidArgumentException(
+                        'The values must be one of the following types: ' . implode(',', $acceptedTypes)
+                    );
+                }
+            }
+        }
     }
 
     /**
-     * @return mixed
+     * Return the length of the dimension X (width of the table)
+     * @return int
      */
     public function getDimensionX() {
         return $this->dimensionX;
     }
 
     /**
-     * @return mixed
+     * Return the length of the dimension Y (height of the table)
+     * @return int
      */
     public function getDimensionY() {
         return $this->dimensionY;
     }
     
     /**
-     * Rotate the table
+     * Rotates the table
      * @param int $angle 90, 180, 270, -90, -180, -270
-     * @return void
+     * @return $this
      * @throws \InvalidArgumentException
      */
     public function rotate($angle) {
-        $data = [];
-        switch ($angle) {
-            case 90:
-                for ($i = count($this->data) - 1; $i >= 0; $i--) {
-                    foreach ($this->data[$i] as $key => $val) {
-                        $data[$key][] = $val;
-                    }
-                }
-                break;
-            case 180:
-                $this->rotate(90);
-                $this->rotate(90);
-                return;
-            case 270:
-                $this->rotate(-90);
-                return;
-            case -90:
-                for ($i = $this->getDimensionX() - 1; $i >= 0; $i--) {
-                    $row = [];
-                    foreach ($this->data as $val) {
-                        $row[] = $val[$i];
-                    }
-                    $data[] = $row;
-                }
-                break;
-            case -180:
-                $this->rotate(90);
-                $this->rotate(90);
-                return;
-            case -270:
-                $this->rotate(90);
-                return;
-            default:
-                throw new \InvalidArgumentException("The angle should be one of the following: 90, 180, 270, -90, -180, -270");
+        if (in_array($angle, [90, -270])) {
+            return $this->rotateClockwise();
+        } elseif (in_array($angle, [-90, 270])) {
+            return $this->rotateCounterclockwise();
+        } elseif (in_array($angle, [180, -180])) {
+            return $this->rotateClockwise()->rotateClockwise();
         }
-        $this->data = $data;
-        $this->calculateDimensions();
+        throw new \InvalidArgumentException("The angle should be one of the following: 90, 180, 270, -90, -180, -270");
+    }
+    
+    /**
+     * Rotates the data clockwise
+     * @return $this
+     */
+    private function rotateClockwise() {
+        $data = [];
+        for ($i = count($this->data) - 1; $i >= 0; $i--) {
+            foreach ($this->data[$i] as $key => $val) {
+                $data[$key][] = $val;
+            }
+        }
+        $this->setData($data);
+        return $this;
+    }
+    
+    /**
+     * Rotates the data counterclockwise
+     * @return $this
+     */
+    private function rotateCounterclockwise() {
+        $data = [];
+        for ($i = $this->getDimensionX() - 1; $i >= 0; $i--) {
+            $row = [];
+            foreach ($this->data as $val) {
+                $row[] = $val[$i];
+            }
+            $data[] = $row;
+        }
+        $this->setData($data);
+        return $this;
     }
 
 }

@@ -2,13 +2,29 @@
 
 namespace ToolkitLab\ASCII\Test;
 
-class TableTest extends TableTestCase {
+use PHPUnit\Framework\TestCase;
+use ToolkitLab\ASCII\Table;
+
+class TableTest extends TestCase {
+    
+    private function getTestTable($dimensions = false) {
+        $data = [["qweqwe", "asd"], ["qaz", "wsx"], ["qw", "er"]];
+        $table = $dimensions ? new Table($data, 20, 20) : new Table($data);
+        return $table;
+    }
 
     public function testGetColumnsMaxLenght() {
         $table = $this->getTestTable();
-        $len = $table->getColumnsMaxLenght(0);
-
-        $this->assertEquals($len, 6);
+        $len1= $table->getColumnsMaxLength(0);
+        $len2 = $table->getColumnsMaxLength(1);
+        $table->setData([["qaz", "wsx"], ["qw", "er"], ["asd", "qweqwety"]]);
+        $len3 = $table->getColumnsMaxLength(0);
+        $len4 = $table->getColumnsMaxLength(1);
+        
+        $this->assertEquals($len1, 6);
+        $this->assertEquals($len2, 3);
+        $this->assertEquals($len3, 3);
+        $this->assertEquals($len4, 8);
     }
 
     public function testGetCell() {
@@ -137,6 +153,35 @@ class TableTest extends TableTestCase {
         ];
         $table->setData($data);
         $table->rotate(1);
+    }
+    
+    public function testTruncate() {
+        $table = $this->getTestTable();
+        $data = [
+            ['qrtrsdf', 'w'],
+            [' e ', 'r'],
+            ['u', 'p'],
+        ];
+        $table->setData($data);
+        $table->truncate(4, '[exceeded]');
+        $this->assertEquals($table->getData(), [
+            ['qrtr[exceeded]', 'w'],
+            ['e', 'r'],
+            ['u', 'p'],
+        ]);
+    }
+    
+    /**
+     * @expectedException     InvalidArgumentException
+     */
+    public function testValidateException() {
+        $table = $this->getTestTable();
+        $data = [
+            [true, 'w'],
+            [' e ', 'r'],
+            ['u', 'p'],
+        ];
+        $table->setData($data);
     }
 
 }

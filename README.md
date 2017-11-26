@@ -1,5 +1,4 @@
 # ASCII converter
-
 [![Latest version][ico-version]][link-packagist]
 [![Software License][ico-license]][link-license]
 [![Build Status][ico-travis]][link-travis]
@@ -8,7 +7,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Gitter][ico-gitter]][link-gitter]
 
-ASCII converter
+The converter allows you to convert an array into an ASCII formatted string. You can see such ASCII formatted tables when working in command line with MySQL or PostgreSQL.
 
 
 [ico-version]: https://img.shields.io/packagist/v/toolkitlab/ascii-converter.svg?style=flat-square

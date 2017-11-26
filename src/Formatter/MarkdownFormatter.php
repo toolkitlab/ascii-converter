@@ -2,32 +2,26 @@
 
 namespace ToolkitLab\ASCII\Formatter;
 
+use ToolkitLab\ASCII\AbstractFormatter;
+
 class MarkdownFormatter extends AbstractFormatter {
 
     protected $metadata = [
-        "name" => "Markdown",
-        "useHeader" => false,
-        "useFooter" => false,
-        "isSeparated" => false,
-        "BL" => "|",
-        "BR" => "|",
-        "BM" => "|",
-        "HBL" => "|",
-        "HBR" => "|",
-        "HBM" => "|",
-        "HPAD" => "-",
-        "H2BL" => "|",
-        "H2BR" => "|",
-        "H2BM" => "|",
-        "H2PAD" => "-",
-        "BBL" => "+",
-        "BBR" => "+",
-        "BBM" => "+",
-        "BPAD" => "-",
-        "FBL" => "|",
-        "FBR" => "|",
-        "FBM" => "|",
-        "FPAD" => "-"
+        'name' => 'Markdown',
+        'content' => [
+            'left' => '|',
+            'middle' => '|',
+            'right' => '|',
+            'pad' => ' ',
+        ],
+        'top_border' => false,
+        'header' => [
+            'left' => '|',
+            'middle' => '|',
+            'right' => '|',
+            'pad' => '-',
+        ],
+        'bottom_border' => false,
     ];
 
 }
