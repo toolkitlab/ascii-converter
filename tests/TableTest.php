@@ -15,11 +15,11 @@ class TableTest extends TestCase {
 
     public function testGetColumnsMaxLenght() {
         $table = $this->getTestTable();
-        $len1= $table->getColumnsMaxLenght(0);
-        $len2 = $table->getColumnsMaxLenght(1);
+        $len1= $table->getColumnsMaxLength(0);
+        $len2 = $table->getColumnsMaxLength(1);
         $table->setData([["qaz", "wsx"], ["qw", "er"], ["asd", "qweqwety"]]);
-        $len3 = $table->getColumnsMaxLenght(0);
-        $len4 = $table->getColumnsMaxLenght(1);
+        $len3 = $table->getColumnsMaxLength(0);
+        $len4 = $table->getColumnsMaxLength(1);
         
         $this->assertEquals($len1, 6);
         $this->assertEquals($len2, 3);
@@ -153,6 +153,35 @@ class TableTest extends TestCase {
         ];
         $table->setData($data);
         $table->rotate(1);
+    }
+    
+    public function testTruncate() {
+        $table = $this->getTestTable();
+        $data = [
+            ['qrtrsdf', 'w'],
+            [' e ', 'r'],
+            ['u', 'p'],
+        ];
+        $table->setData($data);
+        $table->truncate(4, '[exceeded]');
+        $this->assertEquals($table->getData(), [
+            ['qrtr[exceeded]', 'w'],
+            ['e', 'r'],
+            ['u', 'p'],
+        ]);
+    }
+    
+    /**
+     * @expectedException     InvalidArgumentException
+     */
+    public function testValidateException() {
+        $table = $this->getTestTable();
+        $data = [
+            [true, 'w'],
+            [' e ', 'r'],
+            ['u', 'p'],
+        ];
+        $table->setData($data);
     }
 
 }

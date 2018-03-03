@@ -15,8 +15,26 @@ class Table {
      * @param int $dimensionX
      * @param int $dimensionY
      */
-    public function __construct($data, $dimensionX = null, $dimensionY = null) {
+    public function __construct(array $data, $dimensionX = null, $dimensionY = null) {
         $this->setData($data, $dimensionX, $dimensionY);
+    }
+    
+    /**
+     * Truncates the values, which are longer that $maxLength
+     * @param int $maxLength
+     * @param string $ending
+     */
+    public function truncate($maxLength, $ending = '...') {
+        foreach ($this->data as &$row) {
+            foreach ($row as &$cell) {
+                $cell = trim($cell);
+                if (strlen($cell) > $maxLength) {
+                    $cell = substr($cell, 0, $maxLength);
+                    $cell = trim($cell, ';,. ') . $ending;
+                }
+            }
+        }
+        $this->calculateDimensions();
     }
 
     /**
@@ -41,18 +59,17 @@ class Table {
      * @param int $columnIndex
      * @return int
      */
-    public function getColumnsMaxLenght($columnIndex) {
+    public function getColumnsMaxLength($columnIndex) {
         if (isset($this->columnsMaxLenght[$columnIndex])) {
-                    return $this->columnsMaxLenght[$columnIndex];
+            return $this->columnsMaxLenght[$columnIndex];
         }
         $width = 0;
         for ($y = 0; $y < $this->dimensionY; $y++) {
             $len = strlen($this->getCell($columnIndex, $y));
             if ($len > $width) {
-                            $width = $len;
+                $width = $len;
             }
         }
-
         $this->columnsMaxLenght[$columnIndex] = $width;
         return $width;
     }
@@ -70,11 +87,10 @@ class Table {
      */
     private function calculateDimensions() {
         $this->dimensionY = $this->dimensionX = 0;
-
         foreach ($this->data as $row) {
             $cnt = count($row);
             if ($cnt > $this->dimensionX) {
-                            $this->dimensionX = $cnt;
+                $this->dimensionX = $cnt;
             }
         }
         $this->dimensionY = count($this->data);
@@ -85,13 +101,32 @@ class Table {
      * Sets the data and calculates the dimensions (if not specified)
      * @param array $data
      */
-    public function setData($data, $dimensionX = null, $dimensionY = null) {
+    public function setData(array $data, $dimensionX = null, $dimensionY = null) {
+        $this->validate($data);
         $this->data = $data;
         if (is_null($dimensionX)) {
             $this->calculateDimensions();
         } else {
             $this->dimensionX = $dimensionX;
             $this->dimensionY = $dimensionY;
+        }
+    }
+    
+    /**
+     * Validates the data
+     * @param array $data
+     * @throws \InvalidArgumentException
+     */
+    protected function validate($data) {
+        $acceptedTypes = ['integer', 'double', 'string'];
+        foreach ($data as $row) {
+            foreach ($row as $cell) {
+                if (!in_array(gettype($cell), $acceptedTypes)) {
+                    throw new \InvalidArgumentException(
+                        'The values must be one of the following types: ' . implode(',', $acceptedTypes)
+                    );
+                }
+            }
         }
     }
 

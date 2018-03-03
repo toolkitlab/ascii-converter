@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ToolkitLab\ASCII\Formatter;
+namespace ToolkitLab\ASCII;
 
 
 interface FormatterInterface
