@@ -302,8 +302,9 @@ abstract class AbstractFormatter implements FormatterInterface {
             $maxLength = $this->table->getColumnsMaxLength($i);
             $this->output .= $delimiter;
             if (count($row)) {
-                $spaces = str_repeat($pad, $maxLength - strlen($row[$i]));
-                $this->output .= " {$row[$i]}{$spaces} ";
+                $cell = isset($row[$i]) ? $row[$i] : '';
+                $spaces = str_repeat($pad, $maxLength - strlen($cell));
+                $this->output .= " {$cell}{$spaces} ";
             } else {
                 $this->output .= str_repeat($pad, $maxLength + 2);
             }
