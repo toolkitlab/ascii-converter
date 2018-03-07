@@ -43,6 +43,11 @@ abstract class AbstractFormatter implements FormatterInterface {
      * @var boolean
      */
     protected $useHeader = false;
+    
+    /**
+     * @var boolean
+     */
+    protected $useSidebar = false;
 
     /**
      * Formatting parameters
@@ -92,8 +97,8 @@ abstract class AbstractFormatter implements FormatterInterface {
         if ($this->getParam('rotate') !== false) {
             $this->table->rotate($this->getParam('rotate'));
         }
-        $this->initHeader();
         $this->initSidebar();
+        $this->initHeader();
         $maxLength = $this->getParam('max_cell_length');
         $ending = $this->getParam('max_cell_ending');
         $this->table->truncate($maxLength, $ending);
@@ -114,12 +119,12 @@ abstract class AbstractFormatter implements FormatterInterface {
         }
         
         if (($mode & self::HEADER_ABC_MODE) === self::HEADER_ABC_MODE) {
-            $data = array_merge([$this->getAbcRange($x)], $data);
+            $data = array_merge([$this->getAbcRange($x, $this->useSidebar)], $data);
             $count++;
         }
         
         if (($mode & self::HEADER_NUMERIC_MODE) === self::HEADER_NUMERIC_MODE) {
-            $data = array_merge([range(1, $x)], $data);
+            $data = array_merge([$this->getNumRange($x, $this->useSidebar)], $data);
             $count++;
         }
         
@@ -141,10 +146,11 @@ abstract class AbstractFormatter implements FormatterInterface {
         $count = 0;
         $mode = $this->getParam('mode');
         $data = $this->table->getData();
+        $headerMode = ($mode & self::HEADER_FIRST_ROW_MODE) === self::HEADER_FIRST_ROW_MODE;
+        $y = $this->table->getDimensionY();
         
         if (($mode & self::SIDEBAR_ABC_MODE) === self::SIDEBAR_ABC_MODE) {
-            $y = $this->table->getDimensionY();
-            $abc = $this->getAbcRange($y);
+            $abc = $this->getAbcRange($y, $headerMode);
             foreach ($data as $key => $val) {
                 $data[$key] = array_merge([array_shift($abc)], $val);
             }
@@ -152,8 +158,9 @@ abstract class AbstractFormatter implements FormatterInterface {
         }
         
         if (($mode & self::SIDEBAR_NUMERIC_MODE) === self::SIDEBAR_NUMERIC_MODE) {
+            $num = $this->getNumRange($y, $headerMode);
             foreach ($data as $key => $val) {
-                $data[$key] = array_merge([$key ? $key : ''], $val);
+                $data[$key] = array_merge([array_shift($num)], $val);
             }
             $count++;
         }
@@ -163,6 +170,7 @@ abstract class AbstractFormatter implements FormatterInterface {
         }
         
         if ($count) {
+            $this->useSidebar = true;
             $this->table->setData($data);
         }
     }
@@ -194,7 +202,8 @@ abstract class AbstractFormatter implements FormatterInterface {
      * @param int $length
      * @return array
      */
-    final protected function getAbcRange($length) {
+    final protected function getAbcRange($length, $firstEmpty = false) {
+        $length = $firstEmpty ? $length - 1 : $length;
         $baseRange = range('A', 'Z');
         $range = range('A', 'Z');
         while (count($range) < $length && count($baseRange) > 1) {
@@ -203,7 +212,25 @@ abstract class AbstractFormatter implements FormatterInterface {
             array_walk($tmpRange, function(&$e) use ($letter) { $e = $letter . $e; });
             $range = array_merge($range, $tmpRange);
         }
-        return array_slice($range, 0, $length);
+        $range = array_slice($range, 0, $length);
+        if ($firstEmpty) {
+            $range = array_merge([''], $range);
+        }
+        return $range;
+    }
+    
+    /**
+     * Returns an array of digits for a spreadsheet header
+     * @param int $length
+     * @return array
+     */
+    final protected function getNumRange($length, $firstEmpty = false) {
+        $length = $firstEmpty ? $length - 1 : $length;
+        $range = range(1, $length);
+        if ($firstEmpty) {
+            $range = array_merge([''], $range);
+        }
+        return $range;
     }
 
     /**
