@@ -352,8 +352,6 @@ echo $formatter->format([
 ```
 will output:
 ```
-Output
-Result
 +-------+----------+
 | Name  | Posit... |
 | John  | Write... |
