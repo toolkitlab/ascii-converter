@@ -208,10 +208,10 @@ echo $formatter->format([
 will output:
 ```
 +---+-------+----------+
-| A | Name  | Position |
-| B | John  | Writer   |
-| C | Anna  | Student  |
-| D | David | Teacher  |
+| 1 | Name  | Position |
+| 2 | John  | Writer   |
+| 3 | Anna  | Student  |
+| 4 | David | Teacher  |
 +---+-------+----------+
 ```
 
@@ -236,12 +236,12 @@ echo $formatter->format([
 ```
 will output:
 ```
-+---+---------------+
-| A | Name Position |
-| B | John Writer   |
-| C | Anna Student  |
-| D | David Teacher |
-+---+---------------+
++---+-------+----------+
+| A | Name  | Position |
+| B | John  | Writer   |
+| C | Anna  | Student  |
+| D | David | Teacher  |
++---+-------+----------+
 ```
 
 ##### Apply spreadsheet mode
