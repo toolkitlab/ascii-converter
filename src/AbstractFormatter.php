@@ -70,12 +70,12 @@ abstract class AbstractFormatter implements FormatterInterface {
 
     /**
      * Converts an array into ASCII-formatted string (table)
-     * @param mixed $data
+     * @param array $data
      * @param array $params
      * @return string
      */
-    public function format($data, $params = []) {
-        $table = $data instanceof Table ? $data : new Table($data);
+    public function format(array $data, $params = []) {
+        $table = new Table($data);
         $this->init($table, $params);
         $this->addTopBorder();
         $this->addHeader();
