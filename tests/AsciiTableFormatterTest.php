@@ -266,7 +266,44 @@ STR;
 STR;
         $this->assertEquals($result, $expect);
     }
-    
+
+
+    public function testNumericSidebarAbcHeaderMode() {
+        $formatter = new TableFormatter([
+            'mode' => AbstractFormatter::SIDEBAR_NUMERIC_MODE | AbstractFormatter::HEADER_ABC_MODE,
+        ]);
+        $result = $formatter->format($this->testData);
+        $expect = <<<STR
+ ___ ________ _____ 
+|   | A      | B   |
+|___|________|_____|
+| 1 | qweqwe | asd |
+| 2 | qaz    | wsx |
+| 3 | qw     | er  |
+ ¯¯¯ ¯¯¯¯¯¯¯¯ ¯¯¯¯¯ 
+
+STR;
+        $this->assertEquals($result, $expect);
+    }
+
+    public function testNumericSidebarNumericHeaderMode() {
+        $formatter = new TableFormatter([
+            'mode' => AbstractFormatter::SIDEBAR_NUMERIC_MODE | AbstractFormatter::HEADER_NUMERIC_MODE,
+        ]);
+        $result = $formatter->format($this->testData);
+        $expect = <<<STR
+ ___ ________ _____ 
+|   | 1      | 2   |
+|___|________|_____|
+| 1 | qweqwe | asd |
+| 2 | qaz    | wsx |
+| 3 | qw     | er  |
+ ¯¯¯ ¯¯¯¯¯¯¯¯ ¯¯¯¯¯ 
+
+STR;
+        $this->assertEquals($result, $expect);
+    }
+
     /**
      * @expectedException     LogicException
      */
@@ -286,7 +323,7 @@ STR;
         ]);
         $formatter->format($this->testData);
     }
-    
+
     public function testMaxLength() {
         $formatter = new TableFormatter(['max_cell_length' => 4]);
         $data = [
